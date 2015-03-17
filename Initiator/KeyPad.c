@@ -11,7 +11,7 @@ void main(int argc, char **argv) {
   
   size_t len_key;
   FILE *kfd;
-  kfd = fopen("key_material", "r");
+  kfd = fopen("/tmp/key_material", "r");
   len_key = fread(key, sizeof(char), 1024, kfd);
   fclose(kfd);
 

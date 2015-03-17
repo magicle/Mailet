@@ -9,8 +9,8 @@ import subprocess
 import TwitterAuth
 import time
 
-PathFacet = "/home/shuai/Desktop/fastgc/"
-#PathFacet = "/home/shuai/tem/fastgc/"
+#PathFacet = "/home/shuai/Desktop/fastgc/"
+PathFacet = "../fastgc/"
 ConType = "17"
 #Version = "0303"
 Version = "0301"
@@ -66,7 +66,7 @@ def ExtractPad():
   return WholePad[bindex:eindex]
 
 def ExtractPlain():
-  f = open("PlainMsg", "r")
+  f = open("/tmp/PlainMsg", "r")
   response = f.readlines()
   plain = TwitterAuth.ExtractPlainText(response)
   return plain

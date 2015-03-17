@@ -32,8 +32,8 @@ class DecentAuthMachine:
   def Authorize(self):
     
     # delete PlainMsg if exists
-    if os.path.isfile("PlainMsg"):
-      os.remove("PlainMsg")
+    if os.path.isfile("/tmp/PlainMsg"):
+      os.remove("/tmp/PlainMsg")
     
     # fork
     pid = os.fork()
@@ -51,7 +51,7 @@ class DecentAuthMachine:
       else:
         print "[Authorize]\tAuthorize Fail"
       
-      os.remove("PlainMsg")
+      os.remove("/tmp/PlainMsg")
       return credential
     else:
       # check whether proxy is online by checking temp file
