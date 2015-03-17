@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html>
+<body>
+
+<h1>Welcome To Use Mailet Service</h1>
+
+<p>username: <input type="text" id="inUname" value=""></p>
+<p>password: <input type="password" id="inPW" value=""></p>
+<button onclick="generate()">generate</button>
+
+
+
+<p id="error"></p>
+
+<!-- Server One -->
+<p id="part1"> &nbsp</p>
+<p>Select the No.1 Server: 
+<input type="number" id="firstServer" value=0 min="0"> 
+<a id="link1"><button onclick="send(1)">send</button></a>
+</p>
+
+<!-- Server Two-->
+
+<p id="part2"> &nbsp</p>
+
+<p>Select the No.2 Server: 
+<input type="number" id="secondServer" value=1 min="0">
+<a id="link2"><button onclick="send(2)">send</button></a>
+</p>
+<p>
+<a id="auth"><button onclick="authorize()">click to authorize</button></a>
+</p>
+
+
+<script>
+  // global variable of Mailet Server list
+  var ServerList = ["magiclamp1000@gmail.com", "magiclamp1010@gmail.com"];
+  var ranCredential = ["", ""];
+  // auto reply with password 
+  
+  
+  function authorize() {
+    var in1 = document.getElementById("firstServer").value;
+    var in2 = document.getElementById("secondServer").value;
+    document.getElementById("auth").href = "mailto:" + ServerList[in1] + "," + ServerList[in2] + "?subject=authorize";
+  }
+  
+  
+  function send(x) {
+  var uname = document.getElementById("inUname").value;
+  var num;
+  if(x==1) {
+    num = document.getElementById("firstServer").value;
+  }
+  if(x==2) {
+    num = document.getElementById("secondServer").value;
+  }
+//  var password = document.getElementById("part" + x).innerHTML;
+  var password = ranCredential[x-1];
+  if (num < ServerList.length) {
+  
+  document.getElementById("link" + x).href = "mailto:" + ServerList[num] + "?subject=password" + "&body=" + uname + " " + password;
+//  document.getElementById("part1").innerHTML = ServerList[num]; 
+  }
+else {
+  document.getElementById("error").innerHTML = "number out of bound!";
+  document.getElementById("link" + x).href = "javascript:void(0)";
+  }
+
+}
+
+function generate() {
+  // clean the error message if reuse
+  document.getElementById("error").innerHTML = "";
+	var passString = document.getElementById("inPW").value;
+  passString = escape(passString);
+  var passValue = [];
+	var i;
+  for(i = 0; i < passString.length; i++) {
+    passValue[passValue.length] = passString.charCodeAt(i);
+  }
+  ran = random(passValue.length);
+  result = xor(passValue, ran);
+
+  // store in global variable
+  ranCredential[0] = intToHexstring(result);
+  ranCredential[1] = intToHexstring(ran);
+  
+  
+
+  if(result != false) {
+    document.getElementById("part1").innerHTML = "Credential 1: " + intToHexstring(result);
+    document.getElementById("part2").innerHTML = "Credential 2: " + intToHexstring(ran);
+  }
+  else {
+    document.getElementById("error").innerHTML = "Error"
+  }
+}
+
+
+function intToHexstring(a) {
+  var pad = "00"   
+  var res = "";
+  var temp = ""
+  var i;
+  for(i = 0; i < a.length; i++) {
+    temp = a[i].toString(16);
+    res += (pad + temp).slice(-pad.length);
+  }
+  
+  return res; 
+} 
+
+function xor(a, b) {
+  var c = [];
+  var i;
+  if(a.length == b.length) {
+    for(i = 0; i < a.length; i++) {
+      c[c.length] = a[i] ^ b[i];
+    }
+  }
+  else {
+    return false;
+  }
+  return c;
+}
+function random(length) {
+  var ran = [];
+  var i;
+  for(i = 0; i < length; i++) {
+    ran[ran.length] = Math.floor(Math.random() * 128);
+  }
+  return ran;
+}
+
+var pi = 3.14;
+var person = "1s3cdidi";
+var answer = 'Yes I am!';
+
+var hexstring = "31";
+var text = "hello";
+var i;
+var outp;
+
+for(i = 0; i < person.length; i++) {
+	text += person[i];
+}
+
+
+//document.getElementById("demo").innerHTML = person.charCodeAt(0).toString(16);
+//document.getElementById("demo").innerHTML = String.fromCharCode(parseInt(hexstring, 16))
+//document.getElementById("demo").innerHTML = text;
+</script>
+
+</body>
+</html>
+
+
+
