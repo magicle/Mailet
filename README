@@ -1,0 +1,11 @@
+Mailet is an unobservable transport proxy which enables the users to access social websites by email applications. Without assuming the Mailet servers are trustworthy, Mailet can support the services requiring privileges without having the complete credential.
+
+
+How to use?
+
+1. Send an Email with random content to an Mailet server 
+2. Authorize by using the attached HTML page in the email response 
+3. Access social websites by sending and receving emails.
+
+
+

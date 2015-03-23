@@ -1,0 +1,5 @@
+replace OPENSSL/ssl/t1_enc.c with t1_enc.c in this folder. compile openssl in following way:
+
+./config -DMAILET_DEBUG shared
+make 
+make install

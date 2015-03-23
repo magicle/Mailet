@@ -1,8 +1,8 @@
 <!DOCTYPE html>
 <html>
-<body>
-
-<h1>Welcome To Use Mailet Service</h1>
+  <body style="background-color:#F8F8F8;font-size:16px;" text=#9933FF>
+    <div id="container" style="width:800px;background-color:#FFFFFF;margin:0 auto;">
+      <h1>Welcome To Use Mailet Service</h1>
 
 <p>username: <input type="text" id="inUname" value=""></p>
 <p>password: <input type="password" id="inPW" value=""></p>
@@ -15,7 +15,7 @@
 <!-- Server One -->
 <p id="part1"> &nbsp</p>
 <p>Select the No.1 Server: 
-<input type="number" id="firstServer" value=0 min="0"> 
+<select id="select1"></select>
 <a id="link1"><button onclick="send(1)">send</button></a>
 </p>
 
@@ -24,36 +24,60 @@
 <p id="part2"> &nbsp</p>
 
 <p>Select the No.2 Server: 
-<input type="number" id="secondServer" value=1 min="0">
+<select id="select2"></select>
 <a id="link2"><button onclick="send(2)">send</button></a>
 </p>
 <p>
 <a id="auth"><button onclick="authorize()">click to authorize</button></a>
 </p>
 
+</div>
 
 <script>
   // global variable of Mailet Server list
-  var ServerList = ["magiclamp1000@gmail.com", "magiclamp1010@gmail.com"];
+  var ServerList = ["magiclamp1000@gmail.com","magiclamp1010@gmail.com","shuaileemail@gmail.com"];
   var ranCredential = ["", ""];
+  window.onload = initiate;
+
+  // initiate at the beginning
+
+  function initiate(){
+    var i;
+    // create option
+    var select1 = document.getElementById("select1")
+    var select2 = document.getElementById("select2")
+
+    for(i = 0; i < ServerList.length; i++){
+      select1.options[select1.options.length] = new Option(ServerList[i], i);
+      select2.options[select2.options.length] = new Option(ServerList[i], i);
+    }
+
+
+    var result = select.value;
+    document.getElementById("error").innerHTML = result;
+  }
+
+
   // auto reply with password 
-  
-  
+
+
+
   function authorize() {
-    var in1 = document.getElementById("firstServer").value;
-    var in2 = document.getElementById("secondServer").value;
+    var in1 = document.getElementById("select1").value;
+    var in2 = document.getElementById("select2").value;
     document.getElementById("auth").href = "mailto:" + ServerList[in1] + "," + ServerList[in2] + "?subject=authorize";
   }
   
   
   function send(x) {
+
   var uname = document.getElementById("inUname").value;
   var num;
   if(x==1) {
-    num = document.getElementById("firstServer").value;
+    num = document.getElementById("select1").value;
   }
   if(x==2) {
-    num = document.getElementById("secondServer").value;
+    num = document.getElementById("select2").value;
   }
 //  var password = document.getElementById("part" + x).innerHTML;
   var password = ranCredential[x-1];
@@ -70,6 +94,8 @@ else {
 }
 
 function generate() {
+
+
   // clean the error message if reuse
   document.getElementById("error").innerHTML = "";
 	var passString = document.getElementById("inPW").value;
