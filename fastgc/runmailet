@@ -1,0 +1,7 @@
+#!/bin/bash
+
+java -cp dist/FasterGC.jar:extlibs/jargs.jar:extlibs/commons-io-1.4.jar Test.TestMailetServer 1>results/mailetserverout 2>results/mailetservererr &
+
+sleep 0.8
+
+java -cp dist/FasterGC.jar:extlibs/commons-io-1.4.jar:extlibs/jargs.jar Test.TestMailetClient --server localhost  1>results/mailetclientout 2>results/mailetclienterr & 
