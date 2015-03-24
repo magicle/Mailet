@@ -1,36 +1,78 @@
 <!DOCTYPE html>
+
+
 <html>
-  <body style="background-color:#F8F8F8;font-size:16px;" text=#9933FF>
-    <div id="container" style="width:800px;background-color:#FFFFFF;margin:0 auto;">
-      <h1>Welcome To Use Mailet Service</h1>
+  <body style="background-color:#FFFFFF;font-size:16px;" text=#9933FF>
+    <div id="container" style="width:80%;background-color:#FFFFFF;margin:0 auto;">
+      <h1>Welcome to Use Mailet Service</h1>
+      <div style="width:35%;float:left">  
 
-<p>username: <input type="text" id="inUname" value=""></p>
-<p>password: <input type="password" id="inPW" value=""></p>
-<button onclick="generate()">generate</button>
+<p>username: &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;<input type="text" id="inUname" value=""></p>
+<p>password: &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input type="password" id="inPW" value=""> 
+</p>
 
-
-
-<p id="error"></p>
+<div style="height:20px;"><p id="error">&nbsp;</p></div>
 
 <!-- Server One -->
-<p id="part1"> &nbsp</p>
-<p>Select the No.1 Server: 
-<select id="select1"></select>
-<a id="link1"><button onclick="send(1)">send</button></a>
+<p id="part1">&nbsp;</p>
+<p>Server 1: &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<select id="select1"></select>
 </p>
+
 
 <!-- Server Two-->
 
-<p id="part2"> &nbsp</p>
+<p id="part2"> &nbsp;</p>
 
-<p>Select the No.2 Server: 
-<select id="select2"></select>
-<a id="link2"><button onclick="send(2)">send</button></a>
+<p>Server 2: &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<select id="select2"></select>
 </p>
-<p>
-<a id="auth"><button onclick="authorize()">click to authorize</button></a>
-</p>
+</div>
 
+<div style="width:20%;float:left">
+  <!---blank space--->
+  <div style="height:35px;"></div>
+<button onclick="generate()">1. generate</button>
+
+  <!---add arrow--->
+<svg height="98" width="500">
+<defs><marker id="myMarker" viewBox="0 0 10 10" refX="1" refY="5" 
+  markerUnits="strokeWidth" orient="auto"
+    markerWidth="4" markerHeight="3">
+      <polyline points="0,0 10,5 0,10 1,5" fill="#6600FF" />
+      </marker></defs>
+      <line x1="40" y1="20" x2="40" y2="78" stroke="#6600FF" stroke-width="4" marker-end="url(#myMarker)" />
+  </svg>
+
+
+  <!---add send button 1--->
+&nbsp;&nbsp;  <a id="link1"><button onclick="send(1)">2. send</button></a>
+
+  <!--- add arrow --->
+<svg height="48" width="500">
+<defs><marker id="myMarker" viewBox="0 0 10 10" refX="1" refY="5" 
+  markerUnits="strokeWidth" orient="auto"
+    markerWidth="4" markerHeight="3">
+      <polyline points="0,0 10,5 0,10 1,5" fill="#6600FF" />
+      </marker></defs>
+      <line x1="40" y1="10" x2="40" y2="38" stroke="#6600FF" stroke-width="4" marker-end="url(#myMarker)" />
+  </svg>
+
+  <!---add send button 2--->
+&nbsp;&nbsp;&nbsp;<a id="link2"><button onclick="send(2)">3. send</button></a>
+
+
+  <!--- add arrow --->
+<svg height="50" width="500">
+<defs><marker id="myMarker" viewBox="0 0 10 10" refX="1" refY="5" 
+  markerUnits="strokeWidth" orient="auto"
+    markerWidth="4" markerHeight="3">
+      <polyline points="0,0 10,5 0,10 1,5" fill="#6600FF" />
+      </marker></defs>
+      <line x1="40" y1="10" x2="40" y2="40" stroke="#6600FF" stroke-width="4" marker-end="url(#myMarker)" />
+  </svg>
+
+  <!--- add authorize button--->
+  <a id="auth"><button onclick="authorize()">4. authorize</button></a>
+  </div>
 </div>
 
 <script>
