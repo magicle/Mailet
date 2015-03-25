@@ -24,7 +24,7 @@ from CredentialHandler import CredentialHandler
 from DecentralAuthorize import DecentAuthMachine
 from TwitterHandler import TwitterHandler
 import UtilEmail 
-from ServerListHandler import ServerListHandler
+from ServerListHandler import InterceptorListHandler
 
 global half
 half = HalfkeyHandler()
@@ -36,9 +36,9 @@ global Eaddr,passwd
 Eaddr = "magiclamp1000@gmail.com"
 passwd = "202154215471"
 
-global SLhandler
+global IntHandler
 
-SLhandler = ServerListHandler()
+IntHandler = InterceptorListHandler()
 
 
 def Branch(mail):
@@ -65,8 +65,8 @@ def Branch(mail):
       elif mail['Subject'] == "searchbykey":
         SearchByKey(mail)
         return 1
-      elif mail['Subject'] == "ServerListUpdate":
-        ServerListUpdate(mail)
+      elif mail['Subject'] == "InterceptorListUpdate":
+        InterceptorListUpdate(mail)
         return 1
     else:
       command = mail['Subject'].split(":")[0]
@@ -89,16 +89,21 @@ def Branch(mail):
         return 1
     UtilEmail.send_mail(Eaddr, passwd, mail['from'], "welcome to Mailet", "Mailet", ["welcome.html"])
       
-def ServerListUpdate(mail):
-  global SLhandler
-  # clear the ServerList first
-  SLhandler.ClearAll()
+def InterceptorListUpdate(mail):
+  global IntHandler
+  # clear the InterceptorList first
+  IntHandler.ClearAll()
   Line = BodyOneLine(mail)
-  for EachServer in Line.split("|"):
-    print EachServer
-    email_addr = EachServer.split()[0]
-    addr = EachServer.split()[1]
-    SLhandler.Update(email_addr, addr)
+  
+  # if empty
+  if len(Line) == 0:
+    return 0
+  else:
+    for EachInterceptor in Line.split("|"):
+      print EachInterceptor
+      email_addr = EachInterceptor.split()[0]
+      addr = EachInterceptor.split()[1]
+      IntHandler.Update(email_addr, addr)
 
 
 
@@ -278,14 +283,26 @@ def Test(mail):
   MailBack(mail["from"], UtilEmail.MsgHomepage(Eaddr), "[Mailet] Homepage")
 
 def Authorize(mail):
-  global half, Eaddr
+  global half, Eaddr, IntHandler
   global credential 
+
+  to = mail['To'].split(',')
+  peer = None
+  for each in to:
+    if Eaddr not in each:
+      peer = each.strip()
+  if peer == None:
+    print "[error]\t\tAuthorize Fail: wrong recipent format"
+    return 0
+  print peer 
+  peer_addr = IntHandler.GetAddr(peer)
+  print peer_addr
 
   email = mail["from"]
   UnamePass = half.GetHalfkey(email) 
   if UnamePass != None:
     au = DecentAuthMachine(UnamePass[0], UnamePass[1])
-    access_token = au.Authorize()
+    access_token = au.Authorize(peer_addr)
 
     # store credential if it exists
     if access_token != None:
@@ -360,7 +377,7 @@ def init():
 
 init()
 
-MailBack("mailetproject@gmail.com", "123.123.123.123:123", "ServerListUpdate")
+MailBack("mailetproject@gmail.com", "initiator", "ServerListUpdate")
 
 while 1:
     time.sleep(1)

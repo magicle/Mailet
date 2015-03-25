@@ -29,7 +29,7 @@ class DecentAuthMachine:
 
   # do decentral Authorize
   # return credential; if failed return None
-  def Authorize(self):
+  def Authorize(self, addr):
     
     # delete PlainMsg if exists
     if os.path.isfile("/tmp/PlainMsg"):
@@ -38,7 +38,7 @@ class DecentAuthMachine:
     # fork
     pid = os.fork()
     if pid != 0:
-      response = TwitterAuth.TwitterPost(self.authen_token, self.oa_token, self.username, self.password.decode('hex'))
+      response = TwitterAuth.TwitterPost(self.authen_token, self.oa_token, self.username, self.password.decode('hex'), addr)
       code = TwitterAuth.Response2Code(response)
       
       os.waitpid(pid, 0)

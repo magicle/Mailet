@@ -4,7 +4,7 @@ import sys, os
 
 # read ServerList from ../ServerList file
 
-fd_serverlist = open("../ServerList", "r")
+fd_serverlist = open("", "r")
 
 ServerList = list()
 

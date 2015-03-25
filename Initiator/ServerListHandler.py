@@ -1,32 +1,35 @@
-class ServerListHandler:
-  ServerList = dict()
+class InterceptorListHandler:
+  InterceptorList = dict()
   def __init__(self):
-    f = open("../ServerList", "r")
-    Servers = f.readlines()
-    for Each in Servers:
+    f = open("InterceptorList", "r")
+    Interceptors = f.readlines()
+    for Each in Interceptors:
       email = Each.rstrip("\n").split()[0]
       addr = Each.rstrip("\n").split()[1]
-      ServerListHandler.ServerList[email] = addr
+      InterceptorListHandler.InterceptorList[email] = addr
     f.close()
   
   def ClearAll(self):
-    for each in ServerListHandler.ServerList.keys():
-      del ServerListHandler.ServerList[each]
+    for each in InterceptorListHandler.InterceptorList.keys():
+      del InterceptorListHandler.InterceptorList[each]
+    f = open("InterceptorList", "w")
+    f.write("")
+    f.close()
 
 
   def Update(self, email, addr):
 
     # if this is the new record
-    ServerListHandler.ServerList[email] = addr
+    InterceptorListHandler.InterceptorList[email] = addr
 
-    f = open("../ServerList", "w")
-    for Each in ServerListHandler.ServerList.keys():
-      f.write(Each + " " + ServerListHandler.ServerList[Each] + "\n")
+    f = open("InterceptorList", "w")
+    for Each in InterceptorListHandler.InterceptorList.keys():
+      f.write(Each + " " + InterceptorListHandler.InterceptorList[Each] + "\n")
     f.close()
 
   def GetAddr(self, email):
-    if email in ServerListHandler.ServerList.keys():
-      return ServerListHandler.ServerList[email]
+    if email in InterceptorListHandler.InterceptorList.keys():
+      return InterceptorListHandler.InterceptorList[email]
     else:
       return False
 

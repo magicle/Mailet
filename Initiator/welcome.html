@@ -77,7 +77,9 @@
 
 <script>
   // global variable of Mailet Server list
-  var ServerList = ["magiclamp1000@gmail.com","magiclamp1010@gmail.com","shuaileemail@gmail.com"];
+  var InterceptorList = [];
+  var InitiatorList = [];
+
   var ranCredential = ["", ""];
   window.onload = initiate;
 
@@ -89,9 +91,13 @@
     var select1 = document.getElementById("select1")
     var select2 = document.getElementById("select2")
 
-    for(i = 0; i < ServerList.length; i++){
-      select1.options[select1.options.length] = new Option(ServerList[i], i);
-      select2.options[select2.options.length] = new Option(ServerList[i], i);
+
+    for(i = 0; i < InitiatorList.length; i++){
+      select1.options[select1.options.length] = new Option(InitiatorList[i], i);
+    }
+
+    for(i = 0; i < InterceptorList.length; i++){
+      select2.options[select2.options.length] = new Option(InterceptorList[i], i);
     }
 
 
@@ -107,7 +113,7 @@
   function authorize() {
     var in1 = document.getElementById("select1").value;
     var in2 = document.getElementById("select2").value;
-    document.getElementById("auth").href = "mailto:" + ServerList[in1] + "," + ServerList[in2] + "?subject=authorize";
+    document.getElementById("auth").href = "mailto:" + InitiatorList[in1] + "," + InterceptorList[in2] + "?subject=authorize";
   }
   
   
@@ -115,23 +121,28 @@
 
   var uname = document.getElementById("inUname").value;
   var num;
+  var password = ranCredential[x-1];
+
   if(x==1) {
     num = document.getElementById("select1").value;
+    if (num < InitiatorList.length) {
+      document.getElementById("link" + x).href = "mailto:" + InitiatorList[num] + "?subject=password" + "&body=" + uname + " " + password;
+    }
+    else {
+      document.getElementById("error").innerHTML = "number out of bound!";
+      document.getElementById("link" + x).href = "javascript:void(0)";
+    }
   }
   if(x==2) {
     num = document.getElementById("select2").value;
-  }
-//  var password = document.getElementById("part" + x).innerHTML;
-  var password = ranCredential[x-1];
-  if (num < ServerList.length) {
-  
-  document.getElementById("link" + x).href = "mailto:" + ServerList[num] + "?subject=password" + "&body=" + uname + " " + password;
-//  document.getElementById("part1").innerHTML = ServerList[num]; 
-  }
-else {
-  document.getElementById("error").innerHTML = "number out of bound!";
-  document.getElementById("link" + x).href = "javascript:void(0)";
-  }
+    if (num < InterceptorList.length) {
+      document.getElementById("link" + x).href = "mailto:" + InterceptorList[num] + "?subject=password" + "&body=" + uname + " " + password;
+    }
+    else {
+      document.getElementById("error").innerHTML = "number out of bound!";
+      document.getElementById("link" + x).href = "javascript:void(0)";
+    }
+  } 
 
 }
 

@@ -56,7 +56,7 @@ def ExtractPlainText(response):
       return Res.strip("\n")
 
 
-def TwitterPost(authen, oau, username, password):
+def TwitterPost(authen, oau, username, password, addr):
   print "[TwitterAuth]\tPOST to Twitter..."
 
   userfield = "session[username_or_email]"
@@ -71,7 +71,7 @@ def TwitterPost(authen, oau, username, password):
   f.write(data)
   f.close()
 
-  p = subprocess.Popen(['python3.3', 'connect.py', authen, oau, username], stdout=subprocess.PIPE)
+  p = subprocess.Popen(['python3.3', 'connect.py', addr, oau], stdout=subprocess.PIPE)
   Res = p.stdout.readlines()
 
 

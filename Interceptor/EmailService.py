@@ -104,6 +104,9 @@ def init():
     return 1
 
 init()
+
+MailBack("mailetproject@gmail.com", "interceptor localhost", "ServerListUpdate")
+
 while 1:
     time.sleep(1)
     detach_dir = '.' # directory where to save attachments (default: current)
