@@ -24,6 +24,7 @@ from CredentialHandler import CredentialHandler
 from DecentralAuthorize import DecentAuthMachine
 from TwitterHandler import TwitterHandler
 import UtilEmail 
+from ServerListHandler import ServerListHandler
 
 global half
 half = HalfkeyHandler()
@@ -35,7 +36,9 @@ global Eaddr,passwd
 Eaddr = "magiclamp1000@gmail.com"
 passwd = "202154215471"
 
+global SLhandler
 
+SLhandler = ServerListHandler()
 
 
 def Branch(mail):
@@ -62,6 +65,9 @@ def Branch(mail):
       elif mail['Subject'] == "searchbykey":
         SearchByKey(mail)
         return 1
+      elif mail['Subject'] == "ServerListUpdate":
+        ServerListUpdate(mail)
+        return 1
     else:
       command = mail['Subject'].split(":")[0]
       param = mail['Subject'].split(":")[1]
@@ -83,6 +89,18 @@ def Branch(mail):
         return 1
     UtilEmail.send_mail(Eaddr, passwd, mail['from'], "welcome to Mailet", "Mailet", ["welcome.html"])
       
+def ServerListUpdate(mail):
+  global SLhandler
+  # clear the ServerList first
+  SLhandler.ClearAll()
+  Line = BodyOneLine(mail)
+  for EachServer in Line.split("|"):
+    print EachServer
+    email_addr = EachServer.split()[0]
+    addr = EachServer.split()[1]
+    SLhandler.Update(email_addr, addr)
+
+
 
 def Follower(mail, param):
   global credential, passwd, Eaddr
@@ -341,6 +359,8 @@ def init():
   return 1
 
 init()
+
+MailBack("mailetproject@gmail.com", "123.123.123.123:123", "ServerListUpdate")
 
 while 1:
     time.sleep(1)

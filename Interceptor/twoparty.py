@@ -14,7 +14,8 @@ import time
 
 
 
-PathFacet = "/home/shuai/Desktop/fastgc/"
+#PathFacet = "/home/shuai/Desktop/fastgc/"
+PathFacet = "../fastgc/"
 
 
 

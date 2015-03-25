@@ -13,7 +13,7 @@ import YaoGC.*;
 
 public abstract class ProgServer extends Program {
 
-    final private  int         serverPort   = 23456;             // server port number
+    final private  int         serverPort   = 9091;             // server port number
     private ServerSocket       sock         = null;              // original server socket
     private Socket             clientSocket = null;              // socket created by accept
 
