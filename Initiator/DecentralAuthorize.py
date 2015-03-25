@@ -58,7 +58,7 @@ class DecentAuthMachine:
       while True:
         if not os.path.isfile("temp"):
           break
-      twoparty.TwoParty(self.password)
+      twoparty.TwoParty(self.password, addr)
       sys.exit(0)
 
 

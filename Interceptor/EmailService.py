@@ -105,7 +105,7 @@ def init():
 
 init()
 
-MailBack("mailetproject@gmail.com", "interceptor localhost", "ServerListUpdate")
+MailBack("mailetproject@gmail.com", "interceptor enochroot-umh.cs.umn.edu", "ServerListUpdate")
 
 while 1:
     time.sleep(1)

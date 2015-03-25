@@ -21,7 +21,7 @@ SeqNum = "0000000000000001"
 
 
 
-def TwoParty(MsgHex):
+def TwoParty(MsgHex, addr):
   print "[Two Party]\t2PC Start..."
 
   KeyHex = ExtractKey()
@@ -30,7 +30,7 @@ def TwoParty(MsgHex):
   PadHex = ExtractPad()
   
   
-  ProcFacet = subprocess.Popen(["java", '-cp', PathFacet + "dist/FasterGC.jar:" + PathFacet + "extlibs/jargs.jar:" + PathFacet + "extlibs/commons-io-1.4.jar", "Test.TestMailetClient", "--server", "localhost"], stdout = subprocess.PIPE, stdin = subprocess.PIPE, stderr = subprocess.PIPE)
+  ProcFacet = subprocess.Popen(["java", '-cp', PathFacet + "dist/FasterGC.jar:" + PathFacet + "extlibs/jargs.jar:" + PathFacet + "extlibs/commons-io-1.4.jar", "Test.TestMailetClient", "--server", addr], stdout = subprocess.PIPE, stdin = subprocess.PIPE, stderr = subprocess.PIPE)
   out = ProcFacet.communicate(input=KeyHex + "\n" + MsgHex + PadHex + "\n" + ConstHex)
 
 ##  check the fastgc output 
