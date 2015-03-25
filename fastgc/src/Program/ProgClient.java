@@ -11,7 +11,7 @@ import YaoGC.*;
 public abstract class ProgClient extends Program {
 
     public static String serverIPname = "localhost";             // server IP name
-    private final int    serverPort   = 9091;                   // server port number
+    private final int    serverPort   = 9901;                   // server port number
     private Socket       sock         = null;                    // Socket object for communicating
 
     protected int otNumOfPairs;

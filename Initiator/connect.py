@@ -37,7 +37,7 @@ flag = 1
 while flag == 1:
   try:
     flag = 0
-    ssl_sock.connect((sys.argv[1], 9090))
+    ssl_sock.connect((sys.argv[1], 9900))
 #    ssl_sock.connect(('enochroot-umh.cs.umn.edu', 1023))
   except (ConnectionRefusedError, ConnectionAbortedError) as e:
     flag = 1

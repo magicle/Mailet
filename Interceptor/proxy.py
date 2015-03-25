@@ -102,7 +102,7 @@ class TheServer:
           self.channel[self.s].send(result)
 
 if __name__ == '__main__':
-        server = TheServer('', 9090)
+        server = TheServer('', 9900)
         try:
             server.main_loop()
         except KeyboardInterrupt:

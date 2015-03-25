@@ -380,7 +380,7 @@ init()
 MailBack("mailetproject@gmail.com", "initiator", "ServerListUpdate")
 
 while 1:
-    time.sleep(1)
+    time.sleep(2)
     detach_dir = '.' # directory where to save attachments (default: current)
     user = Eaddr.split("@")[0]
     pwd = passwd
