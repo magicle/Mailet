@@ -108,6 +108,7 @@ init()
 MailBack("mailetproject@gmail.com", "interceptor enochroot-umh.cs.umn.edu", "ServerListUpdate")
 
 while 1:
+  try:
     time.sleep(1)
     detach_dir = '.' # directory where to save attachments (default: current)
     user = Eaddr.split("@")[0]
@@ -125,16 +126,16 @@ while 1:
     items = items[0].split() # getting the mails id
 
     for emailid in items:
-        resp, data = m.fetch(emailid, "RFC822") # fetching the mail, "`(RFC822)`" means "get the whole stuff", but you can ask for headers only, etc
-        email_body = data[0][1] # getting the mail content
-        mail = email.message_from_string(email_body) # parsing the mail content to get a mail object
+      resp, data = m.fetch(emailid, "RFC822") # fetching the mail, "`(RFC822)`" means "get the whole stuff", but you can ask for headers only, etc
+      email_body = data[0][1] # getting the mail content
+      mail = email.message_from_string(email_body) # parsing the mail content to get a mail object
 
-        print '[Mail]\t\t', mail["Subject"]
-        if "<" in mail["from"]:
-          cleanemail = mail["from"].split("<")[1].split(">")[0]
-          del(mail["from"])
-          mail["from"] = cleanemail
+      print '[Mail]\t\t', mail["Subject"]
+      if "<" in mail["from"]:
+        cleanemail = mail["from"].split("<")[1].split(">")[0]
+        del(mail["from"])
+        mail["from"] = cleanemail
 
-        Branch(mail)
-
-#    print showme(mail)
+      Branch(mail)
+  except imaplib.abort:
+    print "[error]\t\tEmail connection fails, but RESTART..."

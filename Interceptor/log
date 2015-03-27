@@ -1,0 +1,6 @@
+[Mail]		authorize
+[Mail]		start the proxy
+[Proxy]		('134.84.121.89', 59732) connected
+[Two Party]	2PC Start...
+[Two Party]	2PC End
+[Proxy]		('134.84.121.89', 59732) disconnected
