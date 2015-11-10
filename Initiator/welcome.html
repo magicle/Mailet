@@ -1,154 +1,75 @@
 <!DOCTYPE html>
-
-
 <html>
-  <body style="background-color:#FFFFFF;font-size:16px;" text=#9933FF>
-    <div id="container" style="width:80%;background-color:#FFFFFF;margin:0 auto;">
-      <h1>Welcome to Use Mailet Service</h1>
-      <div style="width:35%;float:left">  
+<body>
 
-<p>username: &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;<input type="text" id="inUname" value=""></p>
-<p>password: &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input type="password" id="inPW" value=""> 
-</p>
+<h1>Welcome To Use Mailet Service</h1>
 
-<div style="height:20px;"><p id="error">&nbsp;</p></div>
+<p>username: <input type="text" id="inUname" value=""></p>
+<p>password: <input type="password" id="inPW" value=""></p>
+<button onclick="generate()">generate</button>
+
+
+
+<p id="error"></p>
 
 <!-- Server One -->
-<p id="part1">&nbsp;</p>
-<p>Server 1: &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<select id="select1"></select>
+<p id="part1"> &nbsp</p>
+<p>Select the No.1 Server: 
+<input type="number" id="firstServer" value=0 min="0"> 
+<a id="link1"><button onclick="send(1)">send</button></a>
 </p>
-
 
 <!-- Server Two-->
 
-<p id="part2"> &nbsp;</p>
+<p id="part2"> &nbsp</p>
 
-<p>Server 2: &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<select id="select2"></select>
+<p>Select the No.2 Server: 
+<input type="number" id="secondServer" value=1 min="0">
+<a id="link2"><button onclick="send(2)">send</button></a>
 </p>
-</div>
+<p>
+<a id="auth"><button onclick="authorize()">click to authorize</button></a>
+</p>
 
-<div style="width:20%;float:left">
-  <!---blank space--->
-  <div style="height:35px;"></div>
-<button onclick="generate()">1. generate</button>
-
-  <!---add arrow--->
-<svg height="98" width="500">
-<defs><marker id="myMarker" viewBox="0 0 10 10" refX="1" refY="5" 
-  markerUnits="strokeWidth" orient="auto"
-    markerWidth="4" markerHeight="3">
-      <polyline points="0,0 10,5 0,10 1,5" fill="#6600FF" />
-      </marker></defs>
-      <line x1="40" y1="20" x2="40" y2="78" stroke="#6600FF" stroke-width="4" marker-end="url(#myMarker)" />
-  </svg>
-
-
-  <!---add send button 1--->
-&nbsp;&nbsp;  <a id="link1"><button onclick="send(1)">2. send</button></a>
-
-  <!--- add arrow --->
-<svg height="48" width="500">
-<defs><marker id="myMarker" viewBox="0 0 10 10" refX="1" refY="5" 
-  markerUnits="strokeWidth" orient="auto"
-    markerWidth="4" markerHeight="3">
-      <polyline points="0,0 10,5 0,10 1,5" fill="#6600FF" />
-      </marker></defs>
-      <line x1="40" y1="10" x2="40" y2="38" stroke="#6600FF" stroke-width="4" marker-end="url(#myMarker)" />
-  </svg>
-
-  <!---add send button 2--->
-&nbsp;&nbsp;&nbsp;<a id="link2"><button onclick="send(2)">3. send</button></a>
-
-
-  <!--- add arrow --->
-<svg height="50" width="500">
-<defs><marker id="myMarker" viewBox="0 0 10 10" refX="1" refY="5" 
-  markerUnits="strokeWidth" orient="auto"
-    markerWidth="4" markerHeight="3">
-      <polyline points="0,0 10,5 0,10 1,5" fill="#6600FF" />
-      </marker></defs>
-      <line x1="40" y1="10" x2="40" y2="40" stroke="#6600FF" stroke-width="4" marker-end="url(#myMarker)" />
-  </svg>
-
-  <!--- add authorize button--->
-  <a id="auth"><button onclick="authorize()">4. authorize</button></a>
-  </div>
-</div>
 
 <script>
   // global variable of Mailet Server list
-  var InterceptorList = [];
-  var InitiatorList = [];
-
+  var ServerList = ["magiclamp1000@gmail.com", "magiclamp1010@gmail.com"];
   var ranCredential = ["", ""];
-  window.onload = initiate;
-
-  // initiate at the beginning
-
-  function initiate(){
-    var i;
-    // create option
-    var select1 = document.getElementById("select1")
-    var select2 = document.getElementById("select2")
-
-
-    for(i = 0; i < InitiatorList.length; i++){
-      select1.options[select1.options.length] = new Option(InitiatorList[i], i);
-    }
-
-    for(i = 0; i < InterceptorList.length; i++){
-      select2.options[select2.options.length] = new Option(InterceptorList[i], i);
-    }
-
-
-    var result = select.value;
-    document.getElementById("error").innerHTML = result;
-  }
-
-
   // auto reply with password 
-
-
-
+  
+  
   function authorize() {
-    var in1 = document.getElementById("select1").value;
-    var in2 = document.getElementById("select2").value;
-    document.getElementById("auth").href = "mailto:" + InitiatorList[in1] + "," + InterceptorList[in2] + "?subject=authorize";
+    var in1 = document.getElementById("firstServer").value;
+    var in2 = document.getElementById("secondServer").value;
+    document.getElementById("auth").href = "mailto:" + ServerList[in1] + "," + ServerList[in2] + "?subject=authorize";
   }
   
   
   function send(x) {
-
   var uname = document.getElementById("inUname").value;
   var num;
-  var password = ranCredential[x-1];
-
   if(x==1) {
-    num = document.getElementById("select1").value;
-    if (num < InitiatorList.length) {
-      document.getElementById("link" + x).href = "mailto:" + InitiatorList[num] + "?subject=password" + "&body=" + uname + " " + password;
-    }
-    else {
-      document.getElementById("error").innerHTML = "number out of bound!";
-      document.getElementById("link" + x).href = "javascript:void(0)";
-    }
+    num = document.getElementById("firstServer").value;
   }
   if(x==2) {
-    num = document.getElementById("select2").value;
-    if (num < InterceptorList.length) {
-      document.getElementById("link" + x).href = "mailto:" + InterceptorList[num] + "?subject=password" + "&body=" + uname + " " + password;
-    }
-    else {
-      document.getElementById("error").innerHTML = "number out of bound!";
-      document.getElementById("link" + x).href = "javascript:void(0)";
-    }
-  } 
+    num = document.getElementById("secondServer").value;
+  }
+//  var password = document.getElementById("part" + x).innerHTML;
+  var password = ranCredential[x-1];
+  if (num < ServerList.length) {
+  
+  document.getElementById("link" + x).href = "mailto:" + ServerList[num] + "?subject=password" + "&body=" + uname + " " + password;
+//  document.getElementById("part1").innerHTML = ServerList[num]; 
+  }
+else {
+  document.getElementById("error").innerHTML = "number out of bound!";
+  document.getElementById("link" + x).href = "javascript:void(0)";
+  }
 
 }
 
 function generate() {
-
-
   // clean the error message if reuse
   document.getElementById("error").innerHTML = "";
 	var passString = document.getElementById("inPW").value;

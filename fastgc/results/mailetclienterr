@@ -1,3 +1,0 @@
-Exception in thread "main" java.lang.NullPointerException
-	at Test.TestMailetClient.hexString2ShortArray(TestMailetClient.java:56)
-	at Test.TestMailetClient.main(TestMailetClient.java:87)

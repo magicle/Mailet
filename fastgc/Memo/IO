@@ -1,8 +1,0 @@
-From byte[] to inputwires in circuits?
-
-
-byte[] msg -> BigInteger:     msg[n]msg[n-1]...msg[0]
-
-BigInteger -> Lab:            Lab[0] <-> BigInteger.testBit(0)
-
-BigInteger output:            bit n <-> outputWires[n]
