@@ -8,4 +8,4 @@ How to use?
 3. Access social websites by sending and receving emails.
 
 
-
+Note: this version uses secure two-party computation to combine the credential. Since Twitter no longer supports RC4-SHA ciphersuite, this method can not be deployed. Still, this method is effective for other websites which support RC4-SHA, such as Facebook.
