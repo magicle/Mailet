@@ -8,7 +8,6 @@ import select
 import time
 import sys
 import ssl, random
-import twoparty
 import datetime
 from StateMachine import StateMachine
 # Changing the buffer_size and delay, you can improve the speed and bandwidth.
@@ -20,7 +19,8 @@ forward_to = ('api.twitter.com', 443)
 
 #context = ssl.create_default_context(ssl.Purpose.CLIENT_AUTH)
 context = ssl.SSLContext(ssl.PROTOCOL_TLSv1)
-context.load_cert_chain(certfile="./cert.pem", keyfile="./key.pem",             password="271412s!")
+context.load_cert_chain(certfile="./cert.pem", keyfile="./key.pem")
+#context.load_cert_chain(certfile="./cert.pem", keyfile="./key.pem",             password="")
 
 
 class Forward:

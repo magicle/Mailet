@@ -8,4 +8,7 @@ How to use?
 3. Access social websites by sending and receving emails.
 
 
-Note: this version uses secure two-party computation to combine the credential. Since Twitter no longer supports RC4-SHA ciphersuite, this method can not be deployed. Still, this method is effective for other websites which support RC4-SHA, such as Facebook.
+How to setup servers?
+
+1. export LD_LIBRARY_PATH=/usr/local/ssl/lib/ (make Python link to modified openssl)
+Note: The combination of the credential is implemented by exploiting the structure of the GCM based ciphersuite.
