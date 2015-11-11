@@ -11,7 +11,7 @@ import iv
 import binascii
 import datetime
 
-
+import Constants
 # TLSConnector
 # TLS level abstraction: enables two parties to compose a single TLS connection
 # num:        the number of parallel TLS connections (num-1 will be checked)
@@ -38,8 +38,8 @@ class TLSConnector:
 
     context = ssl.SSLContext(ssl.PROTOCOL_TLSv1_2)
     context.verify_mode = ssl.CERT_REQUIRED
-    context.set_ciphers("AES128-GCM-SHA256")
-    context.load_verify_locations("/etc/ssl/certs/VeriSign_Class_3_Public_Primary_Certification_Authority_-_G5.pem");
+    context.set_ciphers(Constants.CIPHERSUITE)
+    context.load_verify_locations(Constants.VERIFY_LOCATION);
 
 
     # creat multiple tls sockets 
@@ -47,21 +47,16 @@ class TLSConnector:
       s1 = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
       self.sock_list.append(s1)
       try:
-        s1.connect(('localhost', 2345 + i))
+        s1.connect(('localhost', Constants.SOCKET_PORT_START + i))
 
-
-
-        # signal the Interceptor 
-        
-        if self.category == "post":
-          s1.sendall(b"\x03")
-        elif self.category == "retweet":
-          s1.sendall(b"\x04")
-        else:
-          print("error: self.category is not initialized!")
+        # set remote machine state: signal the Interceptor 
+        if self.category not in Constants.CONTROL_CODE:
+          print("error in TLSConnector: invalid Control Code!")
+#          s1.sendall(b"\x03")
+        s1.sendall(Constants.CONTROL_CODE[self.category])
 
       except (ConnectionRefusedError, ConnectionAbortedError) as e:
-        print("error in creating s1 socket")
+        print("error in TLSConnector: failed in creating s1 socket")
 
 
       s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
@@ -71,22 +66,22 @@ class TLSConnector:
 
 
       try:
-        ssl_sock.connect(('localhost', 2345 + i))
+        ssl_sock.connect(('localhost', Constants.SOCKET_PORT_START + i))
       except (ConnectionRefusedError, ConnectionAbortedError) as e:
-        print("error in having tls connect!")
+        print("error in TLSConnector: failed in creating tls connect!")
 
       cert = ssl_sock.getpeercert()
 
-      if os.path.isfile("/tmp/PlainMsg"):
-        os.remove("/tmp/PlainMsg")
+      if os.path.isfile(Constants.OPENSSL_DUMP_FILE):
+        os.remove(Constants.OPENSSL_DUMP_FILE)
 
       print("before ssl_sock.sendall()")
       print("environmental variable is:", os.environ['LD_LIBRARY_PATH'])
 
       ssl_sock.sendall(str.encode(self.content))
 
-      if not os.path.isfile("/tmp/PlainMsg"):
-        print("PlainMsg file does not exist, please check environment")
+      if not os.path.isfile(Constants.OPENSSL_DUMP_FILE):
+        print("error in TLSConnector: PlainMsg file does not exist, please check environment")
 
       # read H
       proc = subprocess.Popen(['./H'], stdout=subprocess.PIPE)
@@ -111,15 +106,15 @@ class TLSConnector:
     for i in range(self.n):
       if i != self.which:
         # send key + iv
-        self.sock_list[i].sendall(b"\x05" + self.key[i] + self.ivv[i])
+        self.sock_list[i].sendall(Constants.CONTROL_CODE['check'] + self.key[i] + self.ivv[i])
 
     # Reconstruction: H 
-    self.sock_list[self.which].sendall(b"\x00" + self.H[self.which]) 
+    self.sock_list[self.which].sendall(Constants.CONTROL_CODE['H'] + self.H[self.which]) 
     data = self.sock_list[self.which].recv(1024)
     print("reply to H: ", data)
 
     # pad 
-    self.sock_list[self.which].sendall(b"\x01" + self.pad[self.which])
+    self.sock_list[self.which].sendall(Constants.CONTROL_CODE['pad'] + self.pad[self.which])
   
   def ReceiveResponse(self):
     

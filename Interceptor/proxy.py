@@ -10,6 +10,7 @@ import sys
 import ssl, random
 import datetime
 from StateMachine import StateMachine
+import Constants
 # Changing the buffer_size and delay, you can improve the speed and bandwidth.
 # But when buffer get to high or delay go too down, you can broke things
 buffer_size = 4096
@@ -20,7 +21,6 @@ forward_to = ('api.twitter.com', 443)
 #context = ssl.create_default_context(ssl.Purpose.CLIENT_AUTH)
 context = ssl.SSLContext(ssl.PROTOCOL_TLSv1)
 context.load_cert_chain(certfile="./cert.pem", keyfile="./key.pem")
-#context.load_cert_chain(certfile="./cert.pem", keyfile="./key.pem",             password="")
 
 
 class Forward:
@@ -47,7 +47,7 @@ class TheServer:
         self.server.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
         self.server.bind((host, port))
         self.server.listen(200)
-        self.n = 8 
+        self.n = Constants.SOCKET_PARALELL_NUM 
         self.which = random.randint(0, self.n-1)
 
     def main_loop(self):
@@ -108,6 +108,7 @@ class TheServer:
         print("data is: ", data)
         # here we can parse and/or modify the data before send forward
 
+        # socket is from the server
         if self.s not in self.client_list:
           
           data = self.state_machine[self.channel[self.s]].Run(data, "server")
@@ -125,7 +126,7 @@ class TheServer:
             # whether send which parameter
             flag = 1
             for eachsock in self.state_machine:
-              if self.state_machine[eachsock].IsPick() == False:
+              if self.state_machine[eachsock].IsReadyPick() == False:
                 flag = 0
             if flag == 1:
               self.s.send(b"\x00" + str(self.which).encode())

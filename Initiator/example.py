@@ -27,7 +27,7 @@ print("cookie is: ", out)
 con = TwitterConnector(8)
 #con.SetCookie(out)
 con.SetCookie(cookiecontent)
-con.InitConn('post', {'post':'say215'})
+con.InitConn('post', {'post':'say222'})
 print("InitConn finished")
 
 con.Start()

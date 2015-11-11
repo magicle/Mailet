@@ -1,5 +1,5 @@
 import twoparty
-
+import Constants
 
 # input: TLS data (client)
 # output: TLS data (to relay)
@@ -17,7 +17,7 @@ class StateMachine:
 
 
   # whether ready for pick & check
-  def IsPick(self):
+  def IsReadyPick(self):
     if self.http_data != None:
       return True
     else:
@@ -42,23 +42,23 @@ class StateMachine:
         return data
 
     if side == "client":
-      if data[0] == 5:
+      if data[0] == Constants.CONTROL_CODE['check_int']:
         self.SetState("check")
         if self.http_data != None:
           twoparty.Check(data[1:], self.http_data)
-      elif data[0] == 4:
+      elif data[0] == Constants.CONTROL_CODE['retweet_int']:
         self.SetState("retweet")
         return None
-      elif data[0] == 3:
+      elif data[0] == Constants.CONTROL_CODE['post_int']:
         self.SetState("post")
         return None
       elif data[0] == 2:
         self.SetState("cookie")
         return None
-      elif data[0] == 0:
+      elif data[0] == Constants.CONTROL_CODE['H_int']:
         self.H = data[1:]
         return {'reply': b"\x00HH"}
-      elif data[0] == 1:
+      elif data[0] == Constants.CONTROL_CODE['pad_int']:
         self.pad = data[1:]
       elif b"\x17\x03\x03" in data:
         self.http_data = data
