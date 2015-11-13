@@ -108,11 +108,12 @@ class TheServer:
         print("data is: ", data)
         # here we can parse and/or modify the data before send forward
 
-        # socket is from the server
         if self.s not in self.client_list:
           
+        # socket is from the server
           data = self.state_machine[self.channel[self.s]].Run(data, "server")
-          self.channel[self.s].send(data)
+          if data != None:
+            self.channel[self.s].send(data)
         
         else:
           # socket is from a client

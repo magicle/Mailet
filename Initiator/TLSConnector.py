@@ -11,7 +11,7 @@ import iv
 import binascii
 import datetime
 
-import Constants
+import Constants, Util
 # TLSConnector
 # TLS level abstraction: enables two parties to compose a single TLS connection
 # num:        the number of parallel TLS connections (num-1 will be checked)
@@ -118,23 +118,34 @@ class TLSConnector:
   
   def ReceiveResponse(self):
     
-    # receive 2 messages
-    count = 2 
-    while True:
-      try:
-        data = self.tlssock_list[self.which].recv(4096)
-        print(data)
-        count = count - 1
-        print(count)
-        if count == 0:
+    if self.category != 'cookie':
+      # receive 2 messages
+      count = 2 
+      while True:
+        try:
+          data = self.tlssock_list[self.which].recv(4096)
+          print(data)
+          count = count - 1
+          print(count)
+          if count == 0:
+            break
+        except socket.timeout:
+          print("timeout")
           break
+      
+      # decode
+      data = io.BytesIO(data)
+      gzipper = gzip.GzipFile(fileobj=data, mode="rb")
+      html = gzipper.read()
+      print(html)
+    else:
+      # for cookie category, should receive from the control channel
+      try:
+        data = self.sock_list[self.which].recv(4096)
+        print("received original traffic:", data)
       except socket.timeout:
         print("timeout")
-        break
-    
-    # decode
-    data = io.BytesIO(data)
-    gzipper = gzip.GzipFile(fileobj=data, mode="rb")
-    html = gzipper.read()
-    print(html)
 
+      # decrypt the traffic and extract auth_token
+      auth_token = Util.Decrypt(data)
+      print("auth_token:", auth_token)

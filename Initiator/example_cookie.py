@@ -24,10 +24,10 @@ Cookie.Write('skymomo10@163.com', cookiecontent)
 out = Cookie.Read("skymomo10@163.com")
 
 print("cookie is: ", out)
-con = TwitterConnector(8)
+con = TwitterConnector(1)
 #con.SetCookie(out)
 con.SetCookie(cookiecontent)
-con.InitConn('post', {'post':'say222'})
+con.InitConn('cookie', {})
 print("InitConn finished")
 
 con.Start()

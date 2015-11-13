@@ -33,10 +33,13 @@ class StateMachine:
     if side == "server":
       if self.client_state == "cookie_pending1":
         self.text = data
+        print("at cookie_pending1 of StateMachine")
         self.client_state == "cookie_pending2"
-        return None
+        return b"\x00" + data 
       elif self.client_state == "cookie_pending2":
-        result = twoparty.AuthSplit(self.text + data)
+        print("at cookie_pending2 of StateMachine")
+#        result = twoparty.AuthSplit(self.text + data)
+        result = self.text + data
         return b"\x00" + result
       else:
         return data
@@ -70,7 +73,8 @@ class StateMachine:
       # if ready to recompute
       if self.client_state != None and self.H != None and self.http_data != None and self.pad != None:
         if self.client_state == "cookie":
-          result = twoparty.CookieSession(self.H, data[1:], self.text, sys.argv[1], sys.argv[2])
+          result = twoparty.CookieSession(self.H, self.pad, self.http_data, self.arg1, self.arg2)
+          print("result in StateMachine of cookie:", result)
           self.client_state = "cookie_pending1"
         elif self.client_state == "post":
           result = twoparty.Post(self.H, self.pad, self.http_data, self.arg1, self.arg2, "Post")

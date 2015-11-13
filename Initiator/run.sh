@@ -1,8 +1,7 @@
 #!/bin/bash
 
-n=8
 
-for i in {0..7} 
+for i in {0..0} 
 do
   echo $i 
   let "port=2345+$i"

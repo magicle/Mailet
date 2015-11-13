@@ -24,6 +24,7 @@ CONTROL_CODE = {
     'check':                  b"\x05",    
     'H':                      b"\x00",
     'pad':                    b"\x01",
+    'cookie':                 b"\x02",
     
     
     }
