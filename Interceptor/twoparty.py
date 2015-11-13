@@ -16,7 +16,8 @@ PathFacet = "../fastgc/"
 
 
 # index: exclude the header
-sindex = {"authorize":977, "cookie_session":344, "cookie_password":900, "Post":691, "Retweet":723}
+sindex = {"authorize":977, "cookie_split":1584, "cookie_password":900, "Post":691, "Retweet":723}
+#sindex = {"authorize":977, "cookie_split":1513, "cookie_password":900, "Post":691, "Retweet":723}
 
 
 def Check(keyiv, data):
@@ -45,7 +46,8 @@ def toHexString(msg):
 
 
 def AuthSplit(data):
-  ind = 1513
+  global sindex
+  ind = sindex["cookie_split"]
   ranwd = randomword(40)
   print("random word is (hex):", binascii.hexlify(ranwd)) 
 

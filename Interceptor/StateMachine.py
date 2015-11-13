@@ -32,10 +32,10 @@ class StateMachine:
   def Run(self, data, side):
     if side == "server":
       if self.client_state == "cookie_pending1":
-        self.text = data
         print("at cookie_pending1 of StateMachine")
         self.client_state == "cookie_pending2"
-        return b"\x00" + data 
+        result = twoparty.AuthSplit(data)
+        return b"\x00" + result
       elif self.client_state == "cookie_pending2":
         print("at cookie_pending2 of StateMachine")
 #        result = twoparty.AuthSplit(self.text + data)
