@@ -24,13 +24,13 @@ class Forward:
 
 
     def start(self, host, port):
-        try:
-            self.forward.connect((host, port))
-            cert = self.forward.getpeercert()
-            return self.forward
-        except ssl.SSLError:
-            return False
-
+        while(True):
+          try:
+              self.forward.connect((host, port))
+              cert = self.forward.getpeercert()
+              return self.forward
+          except ConnectionRefusedError:
+              pass
 class TheServer:
     input_list = []
     channel = {}
@@ -96,6 +96,7 @@ class TheServer:
         # delete both objects from channel dict
 #        del self.channel[out]
         del self.channel[self.s]
+        sys.exit(1)
 
     def on_recv(self):
         data = self.data

@@ -60,7 +60,7 @@ class TwitterConnector(TLSConnector):
   def InitConn(self, category, arg):
     self.category = category
 
-    authen_token = "0327c384700677b5798693bad74ae473cee0601f"
+    authen_token = "1327c384700677b5798693bad74ae473cee0601f"
     # parameters 
     
 
@@ -86,20 +86,21 @@ class TwitterConnector(TLSConnector):
     # category: cookie
     elif category == "cookie":
       while True:
-        (sess, guest_id, authen_token) = self.AuthenToken()
-        print("sess length:", len(sess))
+        (self.sess, self.guest_id, self.authen_token) = self.AuthenToken()
+
+        print("sess length:", len(self.sess))
         # pick the sess with 285 length
-        if len(sess) == 285:
+        if len(self.sess) == 285:
           break
       # username & password
       # for test: 
       # cred1: 48156b6211547a190871
       # cred2: 2e74080765321b7a6d05
-      username = urllib.parse.quote("skymomo10@163.com")
-      password = binascii.unhexlify("48156b6211547a190871").decode('utf-8')
+      username = urllib.parse.quote(arg['username'])
+      password = binascii.unhexlify(arg['passcode']).decode('utf-8')
 
-      cookie = "_twitter_sess=" + sess + ";" + "guest_id=" + guest_id + ";"
-      post = "repost_after_login=%2Fintent%2Ftweet&authenticity_token=" + authen_token + "&status=say3&session%5Busername_or_email%5D=" + username + "&session%5Bpassword%5D=" + password
+      cookie = "_twitter_sess=" + self.sess + ";" + "guest_id=" + self.guest_id + ";"
+      post = "repost_after_login=%2Fintent%2Ftweet&authenticity_token=" + self.authen_token + "&status=say3&session%5Busername_or_email%5D=" + username + "&session%5Bpassword%5D=" + password
       header1 = "POST /intent/sessions HTTP/1.1\r\n"
       header2 = "Referer: https://twitter.com/intent/tweet\r\n" + "cookie: " + cookie + "\r\n"
       header3 = "Content-Type: application/x-www-form-urlencoded\r\nContent-Length: " + str(len(post)) + "\r\n\r\n"
@@ -110,3 +111,14 @@ class TwitterConnector(TLSConnector):
       print("InitConn: Invalid Parameters")
 
     self.SetContent(content)
+  def ReceiveResponse(self):
+    if self.category == "cookie": 
+      (auth_token, twid) = super().ReceiveResponse()
+      if auth_token != None:
+        cookie = "_twitter_sess=" + self.sess + ";" + twid +";" + "guest_id=" + self.guest_id + ";" + "auth_token=" + auth_token.decode('utf-8') + ";"
+        return cookie
+      else:
+        return None
+    else:
+      res = super().ReceiveResponse()
+      return res

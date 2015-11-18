@@ -2,7 +2,7 @@ class CredentialHandler:
   credential = dict()
 
   def __init__(self):
-    f = open("credential", "r")
+    f = open("./CredentialHandler/credential", "r")
     for item in f.readlines():
       # strip the \n
       item = item.rstrip("\n")
@@ -27,7 +27,7 @@ class CredentialHandler:
       CredentialHandler.credential[email].append(access_secret)
     
     # write back for update
-    f = open("credential", "w")
+    f = open("./CredentialHandler/credential", "w")
     for key in CredentialHandler.credential.keys():
       f.write(key + ":")
       for item in CredentialHandler.credential[key]:

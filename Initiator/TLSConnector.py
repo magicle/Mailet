@@ -26,7 +26,20 @@ class TLSConnector:
   def SetContent(self, content):
     self.content = content
 
+
+  def LocalProxies(self, number):
+    os.environ['LD_LIBRARY_PATH'] = ""
+    for i in range(number):
+      port = Constants.SOCKET_PORT_START + i
+      proc = subprocess.Popen(['python3.4', 'localproxy.py', str(port)])
+
+
   def Start(self):
+    # start local proxy
+    self.LocalProxies(self.n)
+    time.sleep(1)
+    print('localproxies finished')
+
     self.sock_list = list()
     self.tlssock_list = list()
     self.H = list()
@@ -137,7 +150,15 @@ class TLSConnector:
       data = io.BytesIO(data)
       gzipper = gzip.GzipFile(fileobj=data, mode="rb")
       html = gzipper.read()
-      print(html)
+      print("htmlthis", html)
+      
+      # check output
+      if b"error" in html:
+        return None
+      else:
+        return 1
+
+
     else:
       # for cookie category, should receive from the control channel
       try:
@@ -147,5 +168,7 @@ class TLSConnector:
         print("timeout")
 
       # decrypt the traffic and extract auth_token
-      auth_token = Util.Decrypt(data)
+      (auth_token, twid) = Util.Decrypt(data)
       print("auth_token:", auth_token)
+      print("twid:", twid)
+      return (auth_token, twid)
