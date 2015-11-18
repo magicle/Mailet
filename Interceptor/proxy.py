@@ -6,13 +6,24 @@
 import socket
 import select
 import time
-import sys
+import sys, os
 import ssl, random
 import datetime
 from StateMachine import StateMachine
 import Constants
-# Changing the buffer_size and delay, you can improve the speed and bandwidth.
-# But when buffer get to high or delay go too down, you can broke things
+
+
+sys.path.append(os.getcwd() + "/CredentialHandler/")
+from CookieManager import CookieManager
+
+# for cookie splitting
+# arg[1]      HalfCredential
+# arg[2]      username
+
+# for post and retweeting 
+# arg[1]      halfcookie
+# arg[2]      username
+
 buffer_size = 4096
 delay = 0.0001
 forward_to = ('api.twitter.com', 443)
@@ -61,7 +72,7 @@ class TheServer:
                 if self.s == self.server:
                     self.on_accept()
                     break
-                print("from: ", self.s.getpeername())
+#                print("from: ", self.s.getpeername())
                 self.data = self.s.recv(buffer_size)
                 if len(self.data) == 0:
                     self.on_close()
@@ -77,7 +88,7 @@ class TheServer:
         clientsock = context.wrap_socket(newsocket, server_side=True)
 
         if forward:
-            print("[Proxy]\t\t", clientaddr, "connected")
+#            print("[Proxy]\t\t", clientaddr, "connected")
             self.input_list.append(clientsock)
             self.input_list.append(forward)
             self.channel[clientsock] = forward
@@ -90,7 +101,7 @@ class TheServer:
             clientsock.close()
 
     def on_close(self):
-        print('[Proxy]\t\t', self.s.getpeername(), "disconnected")
+#        print('[Proxy]\t\t', self.s.getpeername(), "disconnected")
         #remove objects from input_list
         self.input_list.remove(self.s)
         self.input_list.remove(self.channel[self.s])
@@ -105,13 +116,20 @@ class TheServer:
 
     def on_recv(self):
         data = self.data
-        print("data is: ", data)
+#        print("data is: ", data)
         # here we can parse and/or modify the data before send forward
 
         if self.s not in self.client_list:
           
         # socket is from the server
-          data = self.state_machine[self.channel[self.s]].Run(data, "server")
+          st_machine =  self.state_machine[self.channel[self.s]]
+          if st_machine.GetState() == "cookie_1":
+            (data, randcode) = st_machine.Run(data, "server")
+              # store the cookie split
+            cook = CookieManager("./cookie/")
+            cook.Write(sys.argv[2], randcode.decode('utf-8'))
+          else:
+            data = st_machine.Run(data, "server")
           if data != None:
             self.channel[self.s].send(data)
         
@@ -136,6 +154,7 @@ if __name__ == '__main__':
         server = TheServer('', 9090)
         try:
             server.main_loop()
+            sys.exit(1)
         except KeyboardInterrupt:
             print("Ctrl C - Stopping server")
             sys.exit(1)

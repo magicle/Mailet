@@ -1,0 +1,1 @@
+1. cookie splitting functionality: sometimes Twitter's response comes by two packets instead of one, causing a bug in splitting algorithm.

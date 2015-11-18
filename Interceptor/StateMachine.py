@@ -25,18 +25,22 @@ class StateMachine:
     
   def SetState(self, state):
     self.client_state = state
-
+  
+  def GetState(self):
+    return self.client_state
   # take in data, set state 
   # (client_state, self.H, self.pad)
 
   def Run(self, data, side):
     if side == "server":
-      if self.client_state == "cookie_pending1":
+      if self.client_state == "cookie_1":
         print("at cookie_pending1 of StateMachine")
-        self.client_state == "cookie_pending2"
-        result = twoparty.AuthSplit(data)
-        return b"\x00" + result
-      elif self.client_state == "cookie_pending2":
+        self.client_state == "cookie_2"
+        (result, randcode) = twoparty.AuthSplit(data)
+
+        return (b"\x00" + result, randcode)
+#        return (b"\x00" + data, randcode)
+      elif self.client_state == "cookie_2":
         print("at cookie_pending2 of StateMachine")
 #        result = twoparty.AuthSplit(self.text + data)
         result = self.text + data
@@ -75,7 +79,7 @@ class StateMachine:
         if self.client_state == "cookie":
           result = twoparty.CookieSession(self.H, self.pad, self.http_data, self.arg1, self.arg2)
           print("result in StateMachine of cookie:", result)
-          self.client_state = "cookie_pending1"
+          self.client_state = "cookie_1"
         elif self.client_state == "post":
           result = twoparty.Post(self.H, self.pad, self.http_data, self.arg1, self.arg2, "Post")
         elif self.client_state == "retweet":

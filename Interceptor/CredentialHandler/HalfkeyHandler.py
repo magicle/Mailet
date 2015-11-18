@@ -2,7 +2,7 @@ class HalfkeyHandler:
   Halfkey = dict()
 
   def __init__(self):
-    f = open("HalfCredential", "r")
+    f = open("./CredentialHandler/HalfCredential", "r")
     for item in f.readlines():
       # strip the \n
       item = item.rstrip("\n")
@@ -27,7 +27,7 @@ class HalfkeyHandler:
       HalfkeyHandler.Halfkey[email].append(password)
 
     # write back in update
-    f = open("HalfCredential", "w")
+    f = open("./CredentialHandler/HalfCredential", "w")
     for key in HalfkeyHandler.Halfkey.keys():
       f.write(key + ":")
       for item in HalfkeyHandler.Halfkey[key]:

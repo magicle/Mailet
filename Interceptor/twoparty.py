@@ -49,11 +49,11 @@ def AuthSplit(data):
   global sindex
   ind = sindex["cookie_split"]
   ranwd = randomword(40)
-  print("random word is (hex):", binascii.hexlify(ranwd)) 
+  print("random word:", binascii.hexlify(ranwd)) 
 
   res = CipherCombine(data, ranwd, ind)
   
-  return res
+  return (res, binascii.hexlify(ranwd))
   
 
 
