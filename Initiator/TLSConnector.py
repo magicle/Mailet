@@ -137,9 +137,8 @@ class TLSConnector:
       while True:
         try:
           data = self.tlssock_list[self.which].recv(4096)
-          print(data)
+          print("1st response:", data)
           count = count - 1
-          print(count)
           if count == 0:
             break
         except socket.timeout:
@@ -150,7 +149,7 @@ class TLSConnector:
       data = io.BytesIO(data)
       gzipper = gzip.GzipFile(fileobj=data, mode="rb")
       html = gzipper.read()
-      print("htmlthis", html)
+      print("2nd response:", html)
       
       # check output
       if b"error" in html:
