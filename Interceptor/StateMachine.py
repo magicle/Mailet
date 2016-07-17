@@ -15,6 +15,9 @@ class StateMachine:
     self.pad = None
     self.http_data = None
 
+    self.COOKIE_START_POS = Constants.COOKIE_START_POS + len(self.arg2)
+    print("self.COOKIE_START_POS:", self.COOKIE_START_POS)
+
 
   # whether ready for pick & check
   def IsReadyPick(self):
@@ -34,17 +37,29 @@ class StateMachine:
   def Run(self, data, side):
     if side == "server":
       if self.client_state == "cookie_1":
+        self.randcode = b""
+        self.client_state = "cookie_2"
         print("at cookie_pending1 of StateMachine")
-        self.client_state == "cookie_2"
-        (result, randcode) = twoparty.AuthSplit(data)
-
-        return (b"\x00" + result, randcode)
-#        return (b"\x00" + data, randcode)
+        self.cookie_length = len(data) - 13
+        print("self.cookie1_length", self.cookie_length)
+        if self.cookie_length <= self.COOKIE_START_POS:
+          return b"\x00" + data 
+        else:
+          (result, randcode) = twoparty.AuthSplit(data, self.COOKIE_START_POS)
+          self.randcode = randcode
+          return b"\x00" + result 
       elif self.client_state == "cookie_2":
         print("at cookie_pending2 of StateMachine")
-#        result = twoparty.AuthSplit(self.text + data)
-        result = self.text + data
+        if self.cookie_length <= self.COOKIE_START_POS:
+          pos = self.COOKIE_START_POS - self.cookie_length
+        else:
+          pos = 0
+
+        (result, randcode) = twoparty.AuthSplit(data, pos)
+        self.randcode = self.randcode + randcode
         return b"\x00" + result
+#        return b"\x00" + data
+
       else:
         return data
 
@@ -67,6 +82,11 @@ class StateMachine:
         return {'reply': b"\x00HH"}
       elif data[0] == Constants.CONTROL_CODE['pad_int']:
         self.pad = data[1:]
+      elif data[0] == Constants.CONTROL_CODE['auth_pos_int']:
+        self.rand_pos = int(data[1:].decode('utf-8')) - self.COOKIE_START_POS
+        print("self.rand_pos", self.rand_pos)
+        print("auth_pos", int(data[1:].decode('utf-8')))
+        return {'record': self.rand_pos} 
       elif b"\x17\x03\x03" in data:
         self.http_data = data
         return None

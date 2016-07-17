@@ -2,7 +2,9 @@
 
 # CRYPTO
 CIPHERSUITE = "AES128-GCM-SHA256"
-VERIFY_LOCATION = "/etc/ssl/certs/VeriSign_Class_3_Public_Primary_Certification_Authority_-_G5.pem"
+#VERIFY_LOCATION = "/etc/ssl/certs/VeriSign_Class_3_Public_Primary_Certification_Authority_-_G5.pem"
+
+VERIFY_LOCATION = "/etc/ssl/certs/DigiCert_High_Assurance_EV_Root_CA.pem"
 
 
 # OPENSSL
@@ -25,6 +27,13 @@ CONTROL_CODE = {
     'H':                      b"\x00",
     'pad':                    b"\x01",
     'cookie':                 b"\x02",
-    
+    'auth_pos':               b"\x06",
     
     }
+
+
+#USERNAME = "skymomo10@163.com"
+#PASSCODE = "facetfacet"
+
+USERNAME = "shuaileemail@gmail.com"
+PASSCODE = "271412shuai!"

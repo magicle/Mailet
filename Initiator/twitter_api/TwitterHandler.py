@@ -10,9 +10,14 @@ class TwitterHandler:
   consumer_key = "wgnkAhlsmOsLugGSbd5QGI45a"
   consumer_secret = 'LHMwiNVVr1cvR0xFFCVNYYpLltWWAtdppiF2SmDqdYB3KZKrZs'
 
-  def __init__(self, access_token_key, access_token_secret):
-    self.access_token_key = access_token_key
-    self.access_token_secret = access_token_secret
+  def __init__(self):
+    f_token = open("Token", "r")
+    lines = f_token.readlines()
+
+    self.access_token_key = lines[0].strip()
+    self.access_token_secret = lines[1].strip()
+
+
 
 
   def GetFollowingName(self, who=None):

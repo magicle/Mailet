@@ -21,5 +21,10 @@ CONTROL_CODE = {
     'H_int':                  0,
     'pad':                    b"\x01",
     'pad_int':                1,
-    
+    'auth_pos':               b"\x06",    
+    'auth_pos_int':           6,    
     }
+
+# where to xor random string: start from 0 
+COOKIE_START_POS = 1980
+#COOKIE_START_POS = 3000

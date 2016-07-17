@@ -45,17 +45,15 @@ def toHexString(msg):
 
 
 
-def AuthSplit(data):
-  global sindex
-  ind = sindex["cookie_split"]
-  ranwd = randomword(40)
-  print("random word:", binascii.hexlify(ranwd)) 
-
-  res = CipherCombine(data, ranwd, ind)
+def AuthSplit(data, pos):
+  # new implementation
+  data_len = len(data)
+  random_len = data_len - pos
   
+  ranwd = randomword(random_len)
+  print("random word:", binascii.hexlify(ranwd))
+  res = CipherCombine(data, ranwd, pos)
   return (res, binascii.hexlify(ranwd))
-  
-
 
 def sxor(s1,s2):    
   # convert strings to a list of character pair tuples

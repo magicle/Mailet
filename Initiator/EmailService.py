@@ -77,8 +77,8 @@ def ReTweet(mail, param):
   # retweet 
   FNULL = open(os.devnull, "w")
   while(True):
-#    proc = subprocess.Popen(['python3.4', 'post_retweet.py', emailaddr, param, "retweet"])
-    proc = subprocess.Popen(['python3.4', 'post_retweet.py', emailaddr, param, "retweet"], stdout=FNULL, stderr=FNULL)
+    proc = subprocess.Popen(['python3.4', 'post_retweet.py', emailaddr, param, "retweet"])
+#    proc = subprocess.Popen(['python3.4', 'post_retweet.py', emailaddr, param, "retweet"], stdout=FNULL, stderr=FNULL)
     proc.wait()
     print "[post_tweet: returncode]\t\t", proc.returncode
     if proc.returncode == 1:

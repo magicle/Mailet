@@ -1,0 +1,88 @@
+import subprocess
+import socket, ssl
+import binascii
+from TwitterConnector import TwitterConnector
+import Constants
+import binascii, io, gzip
+
+
+# decrypt the response traffic for the cookie category
+def Decrypt(data):
+  iv2 = binascii.hexlify(data[5:13])
+  ciphertext = binascii.hexlify(data[13:])
+  
+  proc = subprocess.Popen(['./decrypt', ciphertext, iv2], stdout=subprocess.PIPE)
+  print("end to decrypt")
+  line = proc.stdout.readline()
+  print('decryption result:', line)
+  print(binascii.unhexlify(line.strip()))
+
+  # debug write to file
+#  f = open("DebugTool/text", "wb")
+#  f.write(line.strip())
+#  f.close()
+
+  # end of debug
+
+  # extract auth_token: 617574685f746f6b656e3d
+  try:
+    in_begin = line.index(b"617574685f746f6b656e3d")
+    in_begin = in_begin + 22
+    in_end = line[in_begin:].index(b"3b")
+    auth = line[in_begin:][:in_end]
+    print('extractd auth is:', auth)
+
+    # extract twid 
+    in_begin = line.index(b"747769643d")
+    in_end = line[in_begin:].index(b"3b")
+    res = line[in_begin:][:in_end]
+    twid = binascii.unhexlify(res).decode('utf-8')
+
+    return (auth, twid)
+  except ValueError:
+    print("String not found!")
+
+#    print("auth is (hex): ", auth)
+#    print("auth is: ", binascii.unhexlify(auth))
+#    print("auth length is: ", len(binascii.unhexlify(auth)))
+
+
+
+def AuthLocator():
+
+  # construct ssl connection to twitter
+  context = ssl.SSLContext(ssl.PROTOCOL_TLSv1_2)
+  context.verify_mode = ssl.CERT_REQUIRED
+  context.set_ciphers(Constants.CIPHERSUITE)
+  context.load_verify_locations(Constants.VERIFY_LOCATION);
+
+  s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+  ssl_sock = context.wrap_socket(s)
+  ssl_sock.settimeout(30)
+
+  ssl_sock.connect(('twitter.com', 443))
+
+  
+  # construct cookie html
+  username = Constants.USERNAME
+  passcode = binascii.hexlify(str.encode(Constants.PASSCODE))
+
+  con = TwitterConnector(1)
+  con.InitConn('cookie', {'username':username, 'passcode':passcode})
+
+  ssl_sock.sendall(str.encode(con.content))
+  data = ssl_sock.recv(4096)
+
+  print("data:", data)
+  
+
+  # search the position of auth_token=
+  st_pos = data.index(b"auth_token=") + 11
+#  print("st_pos:", st_pos)
+#  print("check:", data[st_pos:-1])
+  
+  return st_pos
+
+
+
+

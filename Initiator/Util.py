@@ -1,5 +1,9 @@
 import subprocess
+import socket, ssl
 import binascii
+import Constants
+import binascii, io, gzip
+
 
 # decrypt the response traffic for the cookie category
 def Decrypt(data):
@@ -21,22 +25,40 @@ def Decrypt(data):
 
   # extract auth_token: 617574685f746f6b656e3d
   try:
-    in_begin = line.index(b"617574685f746f6b656e3d")
-    in_begin = in_begin + 22
-    in_end = line[in_begin:].index(b"3b")
-    auth = line[in_begin:][:in_end]
-    print('extractd auth is:', auth)
+# old implementation
+#    in_begin = line.index(b"617574685f746f6b656e3d")
+#    in_begin = in_begin + 22
+#    in_end = line[in_begin:].index(b"3b")
+#    auth = line[in_begin:][:in_end]
+#    print('extractd auth is:', auth)
 
+
+    in_twid = line.index(b"747769643d")
+    in_twid_semi = line[in_twid:].index(b"3b")
+    in_begin = in_twid + in_twid_semi + 62*2
+    in_end = in_begin + 40*2
+    auth = line[in_begin:in_end]
+    print('extractd auth is:', auth)
+    print('extractd auth is(unhexlify):', binascii.unhexlify(auth))
+    pos = str(int(in_begin/2)).encode('utf-8')
+    
     # extract twid 
     in_begin = line.index(b"747769643d")
     in_end = line[in_begin:].index(b"3b")
     res = line[in_begin:][:in_end]
     twid = binascii.unhexlify(res).decode('utf-8')
 
-    return (auth, twid)
+    return (auth, twid, pos)
   except ValueError:
     print("String not found!")
 
 #    print("auth is (hex): ", auth)
 #    print("auth is: ", binascii.unhexlify(auth))
 #    print("auth length is: ", len(binascii.unhexlify(auth)))
+
+
+
+
+
+
+

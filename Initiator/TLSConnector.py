@@ -58,6 +58,7 @@ class TLSConnector:
     # creat multiple tls sockets 
     for i in range(self.n):
       s1 = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+      s1.settimeout(2)
       self.sock_list.append(s1)
       try:
         s1.connect(('localhost', Constants.SOCKET_PORT_START + i))
@@ -160,14 +161,27 @@ class TLSConnector:
 
     else:
       # for cookie category, should receive from the control channel
-      try:
-        data = self.sock_list[self.which].recv(4096)
-        print("received original traffic:", data)
-      except socket.timeout:
-        print("timeout")
-
+      data = b""
+      while True:
+        try:
+          recv_data = self.sock_list[self.which].recv(4096)
+          print("received original traffic:", recv_data)
+          data = data + recv_data
+        except socket.timeout:
+          print("timeout")
+          break
+         
       # decrypt the traffic and extract auth_token
-      (auth_token, twid) = Util.Decrypt(data)
-      print("auth_token:", auth_token)
-      print("twid:", twid)
-      return (auth_token, twid)
+      try:
+        (auth_token, twid, pos) = Util.Decrypt(data)
+        print("auth_token:", auth_token)
+        print("twid:", twid)
+        print("auth pos:", pos)
+
+        # send pos to Interceptor
+        self.sock_list[self.which].sendall(Constants.CONTROL_CODE['auth_pos'] + pos)
+
+        return (auth_token, twid)
+      except TypeError:
+        print("\n\nNoneType object is not iterable\n\n")
+      

@@ -80,7 +80,11 @@ class TwitterConnector(TLSConnector):
       header2 = "Referer: https://twitter.com/intent/retweet?tweet_id=" + arg['retweet'] + "\r\n" + "cookie: " + self.cookie + "\r\n"
       header3 = "Content-Type: application/x-www-form-urlencoded\r\nContent-Length: " + str(len(post)) + "\r\n\r\n"
       content = header1 + self.HeaderConstant + header2 + header3 + post
+    
 
+    # category: get screen name
+    elif category == "screen_name":
+      
 
 
     # category: cookie

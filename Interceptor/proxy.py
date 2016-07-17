@@ -122,14 +122,14 @@ class TheServer:
         if self.s not in self.client_list:
           
         # socket is from the server
-          st_machine =  self.state_machine[self.channel[self.s]]
-          if st_machine.GetState() == "cookie_1":
-            (data, randcode) = st_machine.Run(data, "server")
+# legacy:          st_machine =  self.state_machine[self.channel[self.s]]
+          if self.state_machine[self.channel[self.s]].GetState() == "cookie_1" or self.state_machine[self.channel[self.s]].GetState() == "cookie_2":
+            data  = self.state_machine[self.channel[self.s]].Run(data, "server")
               # store the cookie split
-            cook = CookieManager("./cookie/")
-            cook.Write(sys.argv[2], randcode.decode('utf-8'))
+#            cook = CookieManager("./cookie/")
+#            cook.Write(sys.argv[2], randcode.decode('utf-8'))
           else:
-            data = st_machine.Run(data, "server")
+            pass
           if data != None:
             self.channel[self.s].send(data)
         
@@ -140,7 +140,11 @@ class TheServer:
             self.s.send(data['reply'])
           elif data != None and 'forward' in data:
             self.channel[self.s].send(data['forward'])
-
+          elif data != None and 'record' in data:
+            print("recording auth random code")
+            cook = CookieManager("./cookie/")
+            pos = data['record']
+            cook.Write(sys.argv[2], self.state_machine[self.s].randcode[2*pos:2*pos+2*40].decode('utf-8'))
           else:
             # whether send which parameter
             flag = 1
