@@ -857,6 +857,11 @@ int tls1_enc(SSL *s, int send)
     int ind;
     FILE *fpp;
     fpp = fopen("/tmp/PlainMsg", "a");
+    
+		fprintf(fpp, "\nIV: ");
+		for (i=0; i<ds->cipher->iv_len; i++) fprintf(fpp, "%02x", ds->iv[i]);
+
+    
     fprintf(fpp, "\nrec->input=");
     for(ind = 0; ind < l; ind++) {
       fprintf(fpp, " %02x", rec->input[ind]);
